@@ -1,0 +1,14 @@
+<p>This is the beginning</p>
+
+<form novalidate >
+	<p ng-repeat="equipment in equipment">
+		<label> {{equipment.name}}</label>
+		<input type="checkbox" ng-model="equipment.selected">
+	</p>
+	
+</form>
+
+
+<p ng-repeat="equipment in equipment">
+		{{equipment.name }} : {{equipment.selected}}
+	</p>
