@@ -1,3 +1,3 @@
-app.factory('equipment', [function(){
+app.factory('equipment', ["$http", function($http){
 	
 }])
