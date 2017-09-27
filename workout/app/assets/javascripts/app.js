@@ -10,12 +10,30 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 		templateUrl: "views/_workoutSetup.html",
 		controller: "WorkoutEngineCtrl",
 		resolve: {
-			concentrations: ['concentrations', function(concentrations) {
+			promise: ['concentrations', function(concentrations) {
 				return concentrations.getAll();
 			}]
 		}
+	}).state('login', {
+		url: "/login",
+		templateUrl: "views/_login.html",
+		controller: "AuthCtrl",
+		onEnter: ["$state", "Auth", function($state, Auth) {
+			Auth.currentUser().then(function() {
+				$state.go('home');
+			});
+		}]
+	}).state('register', {
+		url: "/register",
+		templateUrl: "views/_register.html",
+		controller: "AuthCtrl",
+		onEnter: ["$state", "Auth", function($state, Auth) {
+			Auth.currentUser().then(function() {
+				$state.go('home');
+			});
+		}]
 	})
 
-	$urlRouterProvider.otherwise('home');
+	$urlRouterProvider.otherwise('login');
 }]);
 

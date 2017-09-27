@@ -1,3 +1,3 @@
-app.controller("WorkoutEngineCtrl", ["$scope", "concentrations", function($scope, concenctrations) {
-	$scope.concenctrations = concenctrations.concentrations
+app.controller("WorkoutEngineCtrl", ["$scope", "concentrations", function($scope, concentrations) {
+	$scope.concentrations = concentrations.concentrations
 }])

@@ -1,0 +1,19 @@
+<nav ng-controller="NavCtrl">
+	<ul class="menu">
+		<li>
+			<a href="#!/home">Home</a>
+		</li>
+		<li ng-show="signedIn()">
+			<a>{{user.email}}</a>
+		</li>
+		<li ng-hide="signedIn()">
+			<a href="#!/login">Login</a>
+		</li>
+		<li ng-hide="signedIn()">
+			<a href="#!/register">Register</a>
+		</li>
+		<li ng-show="signedIn()">
+			<a ng-click="logout()">Logout</a>
+		</li>
+	</ul>
+</nav>

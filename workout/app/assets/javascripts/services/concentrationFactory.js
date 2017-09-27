@@ -4,8 +4,10 @@ app.factory('concentrations', ["$http", function($http){
 	};
 
 	obj.getAll = function() {
-		return $http.get('/concentrations.json').then(function(response) {
+		return $http.get('/concentration.json').then(function(response) {
 			angular.copy(response.data, obj.concentrations);
 		});
 	};
+
+	return obj;
 }]);

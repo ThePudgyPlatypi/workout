@@ -1,8 +1,9 @@
 class EquipmentController < ApplicationController
-  def index
-  	respond_with Equipment.all
-  end
+	
+	def index
+		respond_with Equipment.all
+	end
 
-  def show
-  end
+	def show
+	end
 end
