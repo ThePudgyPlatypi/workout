@@ -1,7 +1,13 @@
 <h1>Please pick your equipment</h1>
 
-<p>Please pick what equipment you have access too.</p>
+<h2>You currently have:</h2>
+<ul>
+	<li ng-repeat="userEquipment in userEquipments">
+		{{userEquipment.name}}
+	</li>
+</ul>
 
+<p>Please pick what equipment you have access too.</p>
 <form ng-submit="addEquipmentToUser()" name="">
 	<p ng-repeat="equipment in equipments">
 		<input type="checkbox" ng-init="selected[$index]=false" ng-model="selected[$index]" ng-true-value="{{equipment}}">
