@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170922201815) do
+ActiveRecord::Schema.define(version: 20170928232225) do
 
   create_table "concentrations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -32,13 +32,6 @@ ActiveRecord::Schema.define(version: 20170922201815) do
     t.datetime "updated_at",  null: false
   end
 
-  create_table "equipment_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "user_id"
-    t.integer "equipment_id"
-    t.index ["equipment_id"], name: "index_equipment_users_on_equipment_id", using: :btree
-    t.index ["user_id"], name: "index_equipment_users_on_user_id", using: :btree
-  end
-
   create_table "exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.string   "description"
@@ -47,6 +40,15 @@ ActiveRecord::Schema.define(version: 20170922201815) do
     t.datetime "updated_at",   null: false
     t.integer  "equipment_id"
     t.index ["equipment_id"], name: "index_exercises_on_equipment_id", using: :btree
+  end
+
+  create_table "user_equipments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "description"
+    t.string   "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["user_id"], name: "index_user_equipments_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -68,7 +70,5 @@ ActiveRecord::Schema.define(version: 20170922201815) do
 
   add_foreign_key "concentrations_exercises", "concentrations"
   add_foreign_key "concentrations_exercises", "exercises"
-  add_foreign_key "equipment_users", "equipment"
-  add_foreign_key "equipment_users", "users"
   add_foreign_key "exercises", "equipment"
 end

@@ -7,7 +7,7 @@ app.controller('AuthCtrl', ["$scope", "$state", "Auth", function($scope, $state,
 
 	$scope.register = function() {
 		Auth.register($scope.user).then(function() {
-			$state.go('home');
+			$state.go('equipSetup');
 		});
 	};
 }])

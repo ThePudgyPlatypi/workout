@@ -1,4 +1,4 @@
-var app = angular.module('workout', ['ui.router', 'templates', 'Devise']);
+var app = angular.module('workout', ['ui.router', 'templates', 'Devise', 'rails']);
 
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
@@ -8,12 +8,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 	}).state('workoutStart', {
 		url: "/workoutSetup", 
 		templateUrl: "views/_workoutSetup.html",
-		controller: "WorkoutEngineCtrl",
-		resolve: {
-			promise: ['concentrations', function(concentrations) {
-				return concentrations.getAll();
-			}]
-		}
+		controller: "WorkoutEngineCtrl"
 	}).state('login', {
 		url: "/login",
 		templateUrl: "views/_login.html",
@@ -32,6 +27,14 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 				$state.go('home');
 			});
 		}]
+	}).state('equipSetup', {
+		url: "/equip/setup",
+		templateUrl: "views/_equipSetup.html",
+		controller: "UserEquipmentCtrl",
+	}).state('equipEdit', {
+		url: "/equip/edit",
+		templateUrl: "views/_equipEdit.html",
+		controller: "UserEquipmentCtrl",
 	})
 
 	$urlRouterProvider.otherwise('login');

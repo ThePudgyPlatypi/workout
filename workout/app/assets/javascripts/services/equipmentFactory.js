@@ -1,3 +1,6 @@
-app.factory('equipment', ["$http", function($http){
-	
+app.factory('equipment', ["railsResourceFactory", function(railsResourceFactory){
+	return railsResourceFactory ({
+		url: '/equipment',
+		name: 'equipment'
+	}); 
 }])

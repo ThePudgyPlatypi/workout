@@ -6,4 +6,8 @@ class ConcentrationController < ApplicationController
 
 	def show
 	end
+
+	private
+	def con_params
+	end
 end

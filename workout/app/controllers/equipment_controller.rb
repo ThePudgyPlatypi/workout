@@ -1,9 +1,6 @@
 class EquipmentController < ApplicationController
-	
 	def index
-		respond_with Equipment.all
-	end
-
-	def show
+		@equipment = Equipment.all
+		render json: @equipment
 	end
 end
