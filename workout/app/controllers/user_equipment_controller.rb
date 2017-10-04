@@ -4,6 +4,7 @@ class UserEquipmentController < ApplicationController
 		@user_equipment = UserEquipment.all
 		@user = User.find(current_user.id)
 		respond_with @user.user_equipments
+		flash[:notice] = "Equipment Saved Successfully"
 	end
 
 	def show
@@ -27,6 +28,10 @@ class UserEquipmentController < ApplicationController
 	end
 
 	def destroy
+		@user = User.find(current_user.id)
+	    @userEquipment = @user.user_equipments.find(params[:id])
+	    @userEquipment.destroy
+	    flash[:notice] = "Equipment Removed Successfully"
 	end
 
 	private

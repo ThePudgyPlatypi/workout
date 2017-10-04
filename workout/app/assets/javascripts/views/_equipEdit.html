@@ -1,20 +1,39 @@
 <h1>Please edit your current equipment</h1>
 
-<h2>You currently have:</h2>
-<ul>
-	<li ng-repeat="userEquipment in userEquipments">
-		{{userEquipment.name}}
-	</li>
-</ul>
+<h2>Your current saved equipment:</h2>
 
-<p>Please pick what equipment you have access too.</p>
-
-<form ng-submit="addEquipmentToUser()" name="">
-	<p ng-repeat="equipment in equipments">
-		<input type="checkbox" ng-init="selected[$index]=false" ng-model="selected[$index]" ng-true-value="{{equipment}}">
-		<label>{{equipment.name}} - {{equipment.description}}</label>
-	</p>
-	<input type="submit">
-</form>
-
+<div class="grid-container">
+  <div class="grid-x grid-padding-x small-up-2 medium-up-3">
+    <div class="cell" ng-repeat="userEquipment in userEquipments">
+		<div class="card">
+			<div class="card-section">
+				{{userEquipment.name}}
+				<a href="" ng-click="removeEquipmentFromUser(userEquipment.id)">x</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="formWrapper">
+	<form ng-submit="addEquipmentToUser()" name="Equipment">
+		<fieldset class="fieldset">
+			<legend>Please pick what equipment you have access too.</legend>
+			<div class="grid-container">
+  				<div class="grid-x grid-margin-x small-up-2 medium-up-3">
+					<div class="cell inputContainer" ng-repeat="equipment in equipments">
+						<input class="equipmentCheckbox" id="{{equipment.name}}" type="checkbox" ng-init="selected[$index]=false" ng-model="selected[$index]" ng-true-value="{{equipment}}">
+						<label for="{{equipment.name}}" class="equipmentCheckboxLabel">
+							<span class="inputName">
+								{{equipment.name}} 
+							</span>
+							<span class="inputDescription">
+								{{equipment.description}}
+							</span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<input class="button large expanded" type="submit">
+	</form>
+</div>
 {{selected}}

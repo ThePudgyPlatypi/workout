@@ -15,8 +15,3 @@
  *= require foundation_and_overrides
  *= require_tree .
  */
-
-body {
-	height: 100vh;
-	/*border: 1px solid black;*/
-}

@@ -1,0 +1,56 @@
+/*variables*/
+$primary: #1779ba;
+$secondary: #767676;
+$success: #3adb76;
+$warning: #ffae00;
+$alert: #cc4b37;
+$light-gray: #e6e6e6;
+$medium-gray: #cacaca;
+$dark-gray: #8a8a8a;
+$black: #0a0a0a;
+$white: #fefefe;
+$global-margin: 1rem;
+$global-padding: 1rem;
+
+html {}
+
+body {
+	height: 100vh;
+	/*border: 1px solid black;*/
+}
+
+html, body {}
+
+/*Check box styling*/
+.inputContainer {
+	margin-bottom: $global-margin;
+}
+
+.inputContainer label {
+	color: $white;
+	padding: $global-padding;
+	background-color: $primary;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+
+.inputContainer label span {
+	display: block;
+}
+
+.inputContainer label .inputName {
+	font-weight: bold;
+}
+
+.inputContainer label .inputDescription {
+	color: $light-gray;
+}
+
+#formWrapper input[type="checkbox"] {
+	display: none;
+}
+
+#formWrapper input[type="checkbox"]:checked + label {
+	background-color: $secondary;
+}
