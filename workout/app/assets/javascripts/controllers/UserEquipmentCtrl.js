@@ -3,8 +3,13 @@ app.controller("UserEquipmentCtrl", [
 	"equipment",
 	"userEquipment", 
 	"Auth",
-	function($scope, equipment, userEquipment, Auth) {
+	"flashr",
+	function($scope, equipment, userEquipment, Auth, flashr) {
 		$scope.searching = true;
+		$scope.flash = {}
+		$scope.flash.saved = function() {
+			flashr.now.success('Equipment successfully saved.', "Saved");
+		}
 		var user;
 		// getting current user
 		Auth.currentUser().then(function(user) {
@@ -20,10 +25,12 @@ app.controller("UserEquipmentCtrl", [
 		});
 
 		// User equipment
+		// Load Query
 
 		userEquipment.query().then(function(results){
 			$scope.userEquipments = [];
-			$scope.userEquipments = results; 
+			$scope.userEquipments = results;
+			$scope.searching = false; 
 		});
 
 		$scope.userEquipments = [];
@@ -70,9 +77,18 @@ app.controller("UserEquipmentCtrl", [
 				}
 			};
 			console.log("Last entry reached");
+			$scope.flash.saved();
 		};
 
 		$scope.removeEquipmentFromUser = function(id) {
+			console.log("Before delete " + $scope.userEquipments);
+			function findDeleted(element) {
+				return element.id === id;
+			}
 			new userEquipment({id: id}).delete();
+			var deleted = $scope.userEquipments.find(findDeleted);
+			var index = $scope.userEquipments.indexOf(deleted);
+			$scope.userEquipments.splice(index, 1);
+			console.log("After delete " + $scope.userEquipments);
 		}
 }]);

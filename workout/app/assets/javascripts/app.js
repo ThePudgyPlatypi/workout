@@ -1,4 +1,4 @@
-var app = angular.module('workout', ['ui.router', 'templates', 'Devise', 'rails']);
+var app = angular.module('workout', ['ui.router', 'templates', 'Devise', 'rails', 'flashr']);
 
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {

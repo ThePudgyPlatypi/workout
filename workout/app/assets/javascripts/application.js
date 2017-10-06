@@ -5,6 +5,8 @@
 //= require angularjs-rails-resource
 //= require jquery
 //= require jquery_ujs
+//= require angular.flashr
+//= require toastr
 //= require foundation
 //= require_tree .
 

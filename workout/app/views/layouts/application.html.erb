@@ -12,23 +12,6 @@
   </head>
 
   <body ng-app="workout">
-    <% if !flash[:notice].blank? %>
-      <div class="success callout" data-closable>
-        <%= flash[:notice] %>
-        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    <% end %>
-
-    <% if !flash[:warning].blank? %>
-      <div class="alert callout" data-closable>
-        <%= flash[:warning] %>
-        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    <% end %>
     <div class="grid-container">
       <div ng-include="'views/_nav.html'"></div>
       <div class="grid-x grid-padding-x text-center">

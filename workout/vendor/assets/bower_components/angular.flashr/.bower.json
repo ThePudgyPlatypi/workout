@@ -1,0 +1,28 @@
+{
+  "name": "angular.flashr",
+  "main": "angular-flashr.js",
+  "dependencies": {
+    "toastr": "*"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "demo",
+    "nuget",
+    ".idea"
+  ],
+  "homepage": "https://github.com/TylerGarlick/angular.flashr",
+  "_release": "3032121284",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "303212128462bd003eabfec5bde06279916427fb"
+  },
+  "_source": "https://github.com/TylerGarlick/angular.flashr.git",
+  "_target": "*",
+  "_originalSource": "angular.flashr",
+  "_direct": true
+}
