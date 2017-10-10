@@ -3,13 +3,11 @@ app.controller("UserEquipmentCtrl", [
 	"equipment",
 	"userEquipment", 
 	"Auth",
-	"flashr",
-	function($scope, equipment, userEquipment, Auth, flashr) {
+	"flash",
+	"$state",
+	function($scope, equipment, userEquipment, Auth, flash, $state) {
 		$scope.searching = true;
-		$scope.flash = {}
-		$scope.flash.saved = function() {
-			flashr.now.success('Equipment successfully saved.', "Saved");
-		}
+		
 		var user;
 		// getting current user
 		Auth.currentUser().then(function(user) {
@@ -77,18 +75,20 @@ app.controller("UserEquipmentCtrl", [
 				}
 			};
 			console.log("Last entry reached");
-			$scope.flash.saved();
+			flash.saved("Equipment");
+			$state.reload();
 		};
 
 		$scope.removeEquipmentFromUser = function(id) {
-			console.log("Before delete " + $scope.userEquipments);
+			var deletedEquip;
 			function findDeleted(element) {
+				deletedEquip = element;
 				return element.id === id;
 			}
 			new userEquipment({id: id}).delete();
 			var deleted = $scope.userEquipments.find(findDeleted);
 			var index = $scope.userEquipments.indexOf(deleted);
 			$scope.userEquipments.splice(index, 1);
-			console.log("After delete " + $scope.userEquipments);
+			flash.deleted(deletedEquip.name);
 		}
 }]);

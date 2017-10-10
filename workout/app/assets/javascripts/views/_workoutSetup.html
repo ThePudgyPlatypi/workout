@@ -2,8 +2,29 @@
 
 <p>What part of the body, if any, would you like to focus on today?</p>
 
-<ul>
-	<li ng-repeat="concentration in concentrations">
+<div ng-repeat="concentration in concentrations">
+	<a ng-click="selectConc(concentration)" class="button expanded">
 		{{concentration.name}}
+	</a>
+</div>
+
+<div>
+	<ul>
+		<li ng-repeat="selected in selectedConcentration">
+			{{selected.name}} - <a ng-click="delete(selected.id)">delete</a>
+		</li>
+	</ul>
+</div>	
+
+<ul>
+	<li ng-repeat="equipment in userEquipments">
+		{{equipment.name}}
 	</li>
 </ul>
+
+<ul>
+	<li ng-repeat="exercise in exercises">
+		{{exercise.name}}
+	</li>
+</ul>
+
