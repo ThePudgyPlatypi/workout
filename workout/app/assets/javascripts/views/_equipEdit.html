@@ -21,7 +21,12 @@
 			<div class="grid-container">
   				<div class="grid-x grid-margin-x small-up-2 medium-up-3">
 					<div class="cell inputContainer" ng-repeat="equipment in equipments">
-						<input class="equipmentCheckbox" id="{{equipment.name}}" type="checkbox" ng-init="selected[$index]=false" ng-model="selected[$index]" ng-true-value="{{equipment}}">
+						<input class="equipmentCheckbox" 
+								id="{{equipment.name}}" 
+								type="checkbox"
+								ng-init="selected[$index]=false" 
+								ng-model="selected[$index]" 
+								ng-true-value="{{equipment}}">
 						<label for="{{equipment.name}}" class="equipmentCheckboxLabel">
 							<span class="inputName">
 								{{equipment.name}} 

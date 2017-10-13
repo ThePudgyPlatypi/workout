@@ -19,6 +19,7 @@ app.controller("UserEquipmentCtrl", [
 			$scope.equipments = results;
 			$scope.searching = false;
 		}, function(error) {
+			console.log(error);
 			$scope.searching = false;
 		});
 
@@ -41,6 +42,7 @@ app.controller("UserEquipmentCtrl", [
 				var duplicate = false;
 				var name = $scope.selected[i].name;
 				var description = $scope.selected[i].description;
+				var equipment_id = $scope.selected[i].id;
 				console.log(i + " - Current selected entry name " + name);
 
 				// First checking if the value is false before continuing 
@@ -70,7 +72,8 @@ app.controller("UserEquipmentCtrl", [
 					// assigning new database entry, user_id gets added via rails controller
 					new userEquipment({
 						name: name,
-						description: description
+						description: description,
+						equipment_id: equipment_id
 					}).create();
 				}
 			};

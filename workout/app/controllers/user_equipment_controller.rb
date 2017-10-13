@@ -6,24 +6,8 @@ class UserEquipmentController < ApplicationController
 		respond_with @user.user_equipments
 	end
 
-	def show
-		
-	end
-
-	def new
-	end
-
 	def create
 		respond_with UserEquipment.create(ue_params.merge(user_id: current_user.id))
-	end
-
-	def edit
-	end
-
-	def update
-	end
-
-	def delete
 	end
 
 	def destroy
@@ -34,6 +18,6 @@ class UserEquipmentController < ApplicationController
 
 	private
 	def ue_params 
-		params.require(:user_equipment).permit(:name, :description, :user_id)
+		params.require(:user_equipment).permit(:name, :description, :user_id, :equipment_id)
 	end
 end

@@ -1,7 +1,8 @@
 class ExerciseController < ApplicationController
 	
 	def index
-		respond_with Exercise.all
+		@concentration = Concentration.find(params[:concentration])
+		respond_with @concentration.exercises
 	end
 
 	def show

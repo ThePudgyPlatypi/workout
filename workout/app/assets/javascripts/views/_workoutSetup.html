@@ -22,9 +22,12 @@
 	</li>
 </ul>
 
+<a ng-click="finish()" class="button">Exercise</a>
+
 <ul>
-	<li ng-repeat="exercise in exercises">
+	<li ng-repeat="exercise in filteredExercises">
 		{{exercise.name}}
 	</li>
 </ul>
+
 

@@ -5,6 +5,7 @@ class ConcentrationController < ApplicationController
 	end
 
 	def show
+		
 	end
 
 	private

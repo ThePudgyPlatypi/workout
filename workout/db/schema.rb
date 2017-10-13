@@ -32,13 +32,6 @@ ActiveRecord::Schema.define(version: 20170928232225) do
     t.datetime "updated_at",  null: false
   end
 
-  create_table "equipment_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "user_id"
-    t.integer "equipment_id"
-    t.index ["equipment_id"], name: "index_equipment_users_on_equipment_id", using: :btree
-    t.index ["user_id"], name: "index_equipment_users_on_user_id", using: :btree
-  end
-
   create_table "exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.string   "description"
@@ -53,9 +46,10 @@ ActiveRecord::Schema.define(version: 20170928232225) do
     t.string   "name"
     t.string   "description"
     t.string   "user_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["user_id"], name: "index_user_equipments_on_user_id", using: :btree
+    t.string   "equipment_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["user_id", "equipment_id"], name: "index_user_equipments_on_user_id_and_equipment_id", using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -77,7 +71,5 @@ ActiveRecord::Schema.define(version: 20170928232225) do
 
   add_foreign_key "concentrations_exercises", "concentrations"
   add_foreign_key "concentrations_exercises", "exercises"
-  add_foreign_key "equipment_users", "equipment"
-  add_foreign_key "equipment_users", "users"
   add_foreign_key "exercises", "equipment"
 end
