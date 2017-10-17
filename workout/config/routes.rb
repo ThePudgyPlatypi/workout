@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 	root 'application#angular'
 	devise_for :users 
 
-	resources :user_equipment, only: [:index, :create, :show]
+	resources :user_equipment, only: [:index, :create, :show, :destroy]
 
 	resources :equipment, only: [:index]
 

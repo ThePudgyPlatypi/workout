@@ -3,11 +3,13 @@
 //= require angular-ui-router
 //= require AngularDevise
 //= require angularjs-rails-resource
+//= require angular-animate
 //= require jquery
 //= require jquery_ujs
 //= require angular.flashr
 //= require toastr
 //= require foundation
+//= require underscore
 //= require_tree .
 
 $(function(){ $(document).foundation(); });

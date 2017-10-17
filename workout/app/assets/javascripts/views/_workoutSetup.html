@@ -1,33 +1,110 @@
-<h1>Let's get started</h1>
+<div class="page-wrapper" ng-switch="navigator">
+	<div ng-switch-when="start" class="page">
+		<h1>Let's get started</h1>
 
-<p>What part of the body, if any, would you like to focus on today?</p>
+		<p>What part of the body, if any, would you like to focus on today?</p>
 
-<div ng-repeat="concentration in concentrations">
-	<a ng-click="selectConc(concentration)" class="button expanded">
-		{{concentration.name}}
-	</a>
+		<div ng-repeat="concentration in concentrations">
+			<a ng-click="selectConc(concentration)" class="button expanded">
+				{{concentration.name}}
+			</a>
+		</div>
+
+		<div>
+			<ul>
+				<li ng-repeat="selected in selectedConcentration">
+					{{selected.name}} - <a ng-click="delete(selected.id)">delete</a>
+				</li>
+			</ul>
+		</div>	
+
+		<a ng-click="navigatorSwitch('parameters')" class="button"> < Next</a>
+	</div>
+
+
+	<!-- workout parameters selection page  -->
+	<div ng-switch-when="parameters" class="page">
+		<h1>Select the difficulty, and length of your workout</h1>
+		<p>Workout difficulty</p>
+		<label>
+			<input type="radio" ng-model="difficulty.value" value="5">
+			Easy Workout
+		</label>
+		<label>
+			<input type="radio" ng-model="difficulty.value" value="3.5" ng-checked="true">
+			Standard Workout
+		</label>
+		<label>
+			<input type="radio" ng-model="difficulty.value" value="2">
+			Advanced Workout
+		</label>
+		
+
+		</br>
+
+		<label for="workoutDuration">Length of Workout
+			<select name="workoutDuration" ng-model="workoutDuration.time">
+				<option value="">No Time Limit</option>
+				<option value="15">15 minutes</option>
+				<option value="20">20 minutes</option>
+				<option value="25">25 minutes</option>
+				<option value="30">30 minutes</option>
+				<option value="35">35 minutes</option>
+				<option value="40">40 minutes</option>
+				<option value="45">45 minutes</option>
+				<option value="50">50 minutes</option>
+				<option value="55">55 minutes</option>
+				<option value="60">1 hour</option>
+			</select>
+		</label>
+
+		<a ng-click="navigatorSwitch('workout')" class="button"> < Next</a>
+		<a ng-click="navigatorSwitch('start')" class="button"> Previous ></a>
+	</div>
+
+	</br>
+
+	<!-- workout confirmation page -->
+	<div ng-switch-when="workout" class="page">
+		<h1>Confirm Workout</h1>
+		<p>You want to work on your <span ng-repeat="selected in selectedConcentration">{{selected.name}}</span>.</p>
+		<p>You want a {{difficulty.name}} workout that lasts {{workoutDuration.time}} minutes.</p>
+		<p>If all that looks good then let's workout!</p>
+		<a ng-click="finish()" class="button">Exercise</a>
+		<a ng-click="navigatorSwitch('parameters')" class="button"> Previous ></a>
+	</div>
+
+	<div ng-switch-when="active" class="page">
+		<ul>
+			<li ng-repeat="exercise in exercises | exercise:equipmentIdList:difficulty.value:workoutDuration.time">
+				{{exercise.name}}
+			</li>
+		</ul>
+		<a href="#!/" class="button expanded">Finish</a>
+	</div>
 </div>
 
-<div>
-	<ul>
-		<li ng-repeat="selected in selectedConcentration">
-			{{selected.name}} - <a ng-click="delete(selected.id)">delete</a>
-		</li>
-	</ul>
-</div>	
 
+
+
+<!-- testing code -->
+<!-- <p>Concentration filtered exercises</p>
 <ul>
-	<li ng-repeat="equipment in userEquipments">
-		{{equipment.name}}
-	</li>
-</ul>
-
-<a ng-click="finish()" class="button">Exercise</a>
-
-<ul>
-	<li ng-repeat="exercise in filteredExercises">
+	<li ng-repeat="exercise in exercises">
 		{{exercise.name}}
 	</li>
 </ul>
 
+<p>Concentration and equipment filtered exercises</p>
+<ul>
+	<li ng-repeat="exercise in exercises | exercise:equipmentIdList:difficulty.value:workoutDuration.time">
+		{{exercise.name}}
+	</li>
+</ul> -->
+
+<!-- <ul>
+	<li ng-repeat="equipment in userEquipments">
+		{{equipment.name}}
+	</li>
+</ul> -->
 

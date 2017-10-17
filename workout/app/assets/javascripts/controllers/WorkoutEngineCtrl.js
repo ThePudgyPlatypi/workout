@@ -6,7 +6,8 @@ app.controller("WorkoutEngineCtrl", [
 	"exercise",
 	"Auth",
 	"flash",
-	function($scope, equipment, userEquipment, concentrations, exercise, Auth, flash) {
+	"exerciseFilter",
+	function($scope, equipment, userEquipment, concentrations, exercise, Auth, flash, exerciseFilter) {
 		$scope.searching = true;
 		
 		// getting current user
@@ -14,7 +15,7 @@ app.controller("WorkoutEngineCtrl", [
 			$scope.user = user.id;
 		});
 
-		// concentrations
+		// concentrations db query
 		concentrations.query().then(function (results) {
 	        $scope.concentrations = results;
 	        $scope.searching = false;
@@ -23,80 +24,116 @@ app.controller("WorkoutEngineCtrl", [
 	        $scope.searching = false;
 	    });
 
+	    // User equipment db query
+		userEquipment.query({user_id: $scope.user}).then(function(results){
+			$scope.userEquipments = results;
+			$scope.searching = false;
+		});
+
 		// array for the concentrations the user will select
 		$scope.selectedConcentration = [];
-		// the eventual filtered exercise array
+		// concentration filtered exerciese, but not equipment filtered
+		$scope.exercises = [];
+		// the eventual filtered exercise array by concentration and equipment
 		$scope.filteredExercises = [];
-		// concentration ids used later for querying exercises by concentration
-		$scope.cId = [];
-		// user equipment equipment id used to filter the exercises later
-    	$scope.eId = [];		
+		$scope.workoutDuration = {};
+		$scope.difficulty = {
+			name: "Standard Difficulty",
+			value: 3.5
+		};
+		$scope.navigator="start";
 
-	    $scope.selectConc = function(x) {
-	    	// console.log("___________________________");
-	    	if ($scope.selectedConcentration.length > 0) {
-	    		for(var i = 0; i < $scope.selectedConcentration.length; i++) {
-	    			var duplicate = false;
-	 				var last = $scope.selectedConcentration.length - 1;
-					var name = $scope.selectedConcentration[i].name;
-					var entry = x.name;
-					// console.log(i + " - Current selected entry name " + entry);
-					// console.log(i + " - Current selected array name " + name);
-					if(name === entry) {
-						// console.log("Duplicate entry");
-						duplicate = true;
-						break;
-					} else if(!duplicate && i === last) {
-						$scope.selectedConcentration.push(x);
-						// console.log($scope.selectedConcentration);
-						break;
+		// duplicate check, takes in array, item you that you want to add to array if there are no dup's, and
+		// the property that you are checking against. Property should be present on each array object.
+		var duplicateCheck = function(arr, item, property, comments) {
+			var duplicate;
+
+			if(!comments) {
+				comments = false;
+			}
+
+			if (comments) {
+				console.log("Array to be checked for duplicates = ");
+				console.log(arr);
+				console.log("Item to be checked if a duplicate = ");
+				console.log(item);
+				console.log("Value being used to find duplicates = " + property);
+			}		
+
+			for(var i = 0; i < arr.length; i++) {
+    			duplicate = false;
+    			var last = arr.length - 1;
+				var name = arr[i][property];
+				var entry = item[property];
+				if (comments) {
+					console.log("Checking array entry: (" + i + ") with value of: (" + name + ") against would-be array entry: (" + entry + ")");
+				}
+				if(name === entry) {
+					if (comments) {
+						console.log("Duplicate entry found on " + i);
+					}
+					duplicate = true;
+					break;
+				} else if(!duplicate && i === last) {
+					if (comments) {
+						console.log("Last index reached, no duplicates found");
+					}
+					break;
+				};
+			};
+			return duplicate;	
+		};
+
+		var exerciseQuery = function(id) {
+			// // run a query and store the corresponding exercises 
+			exercise.query({concentration: id}).then(function(results) {
+				// for loop to add each individual result 
+				for( var each = 0; each < results.length; each++) {
+					var duplicate = duplicateCheck($scope.exercises, results[each], "name");
+					if (!duplicate) {
+						$scope.exercises.push(results[each]);
+					} else {
+						continue;
 					};
 				};
+				$scope.searching = false;
+			}, function(error) {
+				console.log(error);
+			});
+		};		
+
+	    $scope.selectConc = function(x) {
+	    	console.log("___________________________");
+	    	if ($scope.selectedConcentration.length > 0) {
+	    		var duplicate = duplicateCheck($scope.selectedConcentration, x, "name");
+	    		if (!duplicate) {
+	    			$scope.selectedConcentration.push(x);
+	    		};
 	    	} else {
-	    		// console.log($scope.selectedConcentration);
-		    	$scope.selectedConcentration.push(x);
-	    		// console.log($scope.selectedConcentration);	
+		    	$scope.selectedConcentration.push(x);	
 	    	};
 	    };
 
 	    $scope.finish = function() {
 	    	if ($scope.selectedConcentration.length > 0) {
-		    	// exercises
-		    	function sortNumbers(a, b){
-		    		return a - b;
-		    	}
-		    	
-		    	for(var c = 0; c < $scope.selectedConcentration.length; c++) {
-		    		var id = $scope.selectedConcentration[c].id;
-		    		$scope.cId.push(id);
-		    		$scope.cId.sort(sortNumbers);
-		    	}
-
-		    	console.log($scope.cId);
-
-		    	for(var eq = 0; eq < $scope.userEquipments.length; eq++) {
-		    		var id = $scope.userEquipments[eq].id;
-		    		$scope.eId.push(id);
-		    		$scope.eId.sort(sortNumbers);
-		    	}
-
-		    	console.log($scope.eId);
-
-		    	for(var q = 0; q < $scope.cId.length; q++) {
-		    		var id = $scope.cId[q];
-		    		exercise.query({concentration: id}).then(function(results) {
-		    			// for loop to add each individual result 
-		    			for( var each = 0; each < results.length; each++) {
-		    				$scope.filteredExercises.push(results[each]);
-		    			}
-						$scope.searching = false;
-					}, function(error) {
-						console.log(error);
-					});
-		    	}
-		    } else {
-		    	flash.saved("nope");
-		    }
+	    		$scope.equipmentIdList = [];
+	    		for (var each = 0; each < $scope.selectedConcentration.length; each++) {
+	    			exerciseQuery($scope.selectedConcentration[each].id);
+	    			console.log("Finished adding equipment");
+	    		}
+	    		for(var i = 0; i < $scope.userEquipments.length; i++) {
+	    			var selected = $scope.userEquipments[i].equipmentId;
+	    			$scope.equipmentIdList.push(parseInt(selected));
+	    			console.log($scope.equipmentIdList);
+	    		} 
+	    		$scope.navigator = "active";
+	    	} else {
+	    		flash.error("please make a selection","");
+	    		// console.log("please make a selection");
+	    	}
+			// $scope.filteredExercises = exerciseFilter($scope.exercises, $scope.userEquipments);
+			// console.log("Finished Filtering");
+			// console.log($scope.filteredExercises);
 	    }
 
 	    $scope.delete = function(id) {
@@ -112,13 +149,7 @@ app.controller("WorkoutEngineCtrl", [
 			flash.deleted(deleted.name);
 		}
 
-
-		// User equipment
-		userEquipment.query({user_id: $scope.user}).then(function(results){
-			$scope.userEquipments = results;
-			$scope.searching = false;
-		});
-
-		
-
+		$scope.navigatorSwitch = function(page) {
+			$scope.navigator = page;
+		}
 }]);

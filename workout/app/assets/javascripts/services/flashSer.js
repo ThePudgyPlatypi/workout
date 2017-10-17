@@ -9,5 +9,9 @@ app.factory('flash',['flashr', function(flashr) {
 		flashr.now.success(name + ' successfully deleted');
 	}
 
+	flash.error = function(string, error) {
+		flashr.now.error(string + ". Error = " + error);
+	}
+
 	return flash;
 }])

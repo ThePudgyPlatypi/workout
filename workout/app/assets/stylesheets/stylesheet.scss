@@ -54,3 +54,28 @@ html, body {}
 #formWrapper input[type="checkbox"]:checked + label {
 	background-color: $secondary;
 }
+
+.page.ng-animate {
+	transition: all 1s;
+}
+
+.page.ng-leave.ng-leave-active,
+.page.ng-enter {
+  opacity: 0;
+}
+.page.ng-leave,
+.page.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+// .page {
+// 	position: absolute;
+// 	left: 0;
+// 	right: 0;
+// 	margin: 0 auto;
+// 	border: 1px solid black;
+// }
+
+// .page:nth-child(n+2) {
+// 	transform: translate(-100vw);
+// }
