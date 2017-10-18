@@ -9,6 +9,7 @@ app.controller("WorkoutEngineCtrl", [
 	"exerciseFilter",
 	function($scope, equipment, userEquipment, concentrations, exercise, Auth, flash, exerciseFilter) {
 		$scope.searching = true;
+		$scope.pageClass="Workout";
 		
 		// getting current user
 		Auth.currentUser().then(function(user) {
@@ -36,12 +37,15 @@ app.controller("WorkoutEngineCtrl", [
 		$scope.exercises = [];
 		// the eventual filtered exercise array by concentration and equipment
 		$scope.filteredExercises = [];
-		$scope.workoutDuration = {};
-		$scope.difficulty = {
-			name: "Standard Difficulty",
-			value: 3.5
+		$scope.workoutDuration = {
+			time: ""
 		};
-		$scope.navigator="start";
+		$scope.difficulty = {
+			value: "Standard Difficulty"
+		};
+		$scope.navigator = "start";
+		$scope.exerciseNavigator = 0;	
+		
 
 		// duplicate check, takes in array, item you that you want to add to array if there are no dup's, and
 		// the property that you are checking against. Property should be present on each array object.
@@ -103,7 +107,7 @@ app.controller("WorkoutEngineCtrl", [
 		};		
 
 	    $scope.selectConc = function(x) {
-	    	console.log("___________________________");
+	    	// console.log("___________________________");
 	    	if ($scope.selectedConcentration.length > 0) {
 	    		var duplicate = duplicateCheck($scope.selectedConcentration, x, "name");
 	    		if (!duplicate) {
@@ -119,16 +123,16 @@ app.controller("WorkoutEngineCtrl", [
 	    		$scope.equipmentIdList = [];
 	    		for (var each = 0; each < $scope.selectedConcentration.length; each++) {
 	    			exerciseQuery($scope.selectedConcentration[each].id);
-	    			console.log("Finished adding equipment");
+	    			// console.log("Finished adding equipment");
 	    		}
 	    		for(var i = 0; i < $scope.userEquipments.length; i++) {
 	    			var selected = $scope.userEquipments[i].equipmentId;
 	    			$scope.equipmentIdList.push(parseInt(selected));
-	    			console.log($scope.equipmentIdList);
+	    			// console.log($scope.equipmentIdList);
 	    		} 
 	    		$scope.navigator = "active";
 	    	} else {
-	    		flash.error("please make a selection","");
+	    		flash.error("please make a selection");
 	    		// console.log("please make a selection");
 	    	}
 			// $scope.filteredExercises = exerciseFilter($scope.exercises, $scope.userEquipments);
@@ -151,5 +155,10 @@ app.controller("WorkoutEngineCtrl", [
 
 		$scope.navigatorSwitch = function(page) {
 			$scope.navigator = page;
+		}
+
+		$scope.exerciseSwitch = function(id) {
+			$scope.exerciseNavigator = id + 1;
+			console.log($scope.exercises.length);
 		}
 }]);

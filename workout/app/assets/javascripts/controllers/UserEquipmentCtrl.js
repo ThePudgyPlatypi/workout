@@ -7,6 +7,7 @@ app.controller("UserEquipmentCtrl", [
 	"$state",
 	function($scope, equipment, userEquipment, Auth, flash, $state) {
 		$scope.searching = true;
+		$scope.pageClass="UserEquipment";
 		
 		var user;
 		// getting current user

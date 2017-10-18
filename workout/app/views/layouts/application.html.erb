@@ -12,11 +12,13 @@
   </head>
 
   <body ng-app="workout">
-    <div class="grid-container">
-      <div ng-include="'views/_nav.html'"></div>
-      <div class="grid-x grid-padding-x text-center expanded">
+    <div ng-include="'views/_nav.html'"></div>
+    <div class="grid-container full">
+      <div class="grid-x text-center">
           <div class="cell">
-            <ui-view></ui-view>
+            <div class="view-container">
+              <div class="view box-shadow" ui-view></div>
+            </div>
           </div>
       </div>
     </div>

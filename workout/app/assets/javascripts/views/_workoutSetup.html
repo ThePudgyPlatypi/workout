@@ -23,21 +23,37 @@
 
 
 	<!-- workout parameters selection page  -->
-	<div ng-switch-when="parameters" class="page">
+	<div ng-switch-when="parameters" class="page box-shadow">
 		<h1>Select the difficulty, and length of your workout</h1>
-		<p>Workout difficulty</p>
-		<label>
-			<input type="radio" ng-model="difficulty.value" value="5">
-			Easy Workout
-		</label>
-		<label>
-			<input type="radio" ng-model="difficulty.value" value="3.5" ng-checked="true">
-			Standard Workout
-		</label>
-		<label>
-			<input type="radio" ng-model="difficulty.value" value="2">
-			Advanced Workout
-		</label>
+		<div class="formWrapper">
+			<fieldset class="fieldset">
+				<legend>Workout Difficulty</legend>
+				<div class="grid-container">
+	  				<div class="grid-x grid-margin-x small-up-3 medium-up-3">
+						<div class="cell inputContainer">
+							<input type="radio" id="easy" ng-model="difficulty.value" value="easy">
+							<label for="easy">
+								<span class="inputName">Easy Workout</span>
+							</label>
+						</div>
+
+						<div class="cell inputContainer">
+							<input type="radio" id="standard" ng-model="difficulty.value" value="standard" ng-checked="true">
+							<label for="standard">
+								<span class="inputName">Standard Workout</span>
+							</label>
+						</div>
+
+						<div class="cell inputContainer">
+							<input type="radio" id="advanced" ng-model="difficulty.value" value="advancedd">
+							<label for="advanced">
+								<span class="inputName">Advanced Workout</span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
 		
 
 		</br>
@@ -65,22 +81,34 @@
 	</br>
 
 	<!-- workout confirmation page -->
-	<div ng-switch-when="workout" class="page">
+	<div ng-switch-when="workout" class="page box-shadow">
 		<h1>Confirm Workout</h1>
 		<p>You want to work on your <span ng-repeat="selected in selectedConcentration">{{selected.name}}</span>.</p>
-		<p>You want a {{difficulty.name}} workout that lasts {{workoutDuration.time}} minutes.</p>
+		<p>You want a <span>{{difficulty.value}}</span> workout that
+			<span ng-if="workoutDuration.time !== ''"> lasts {{workoutDuration.time}} minutes.</span>
+			<span ng-if="workoutDuration.time == ''"> has no time limit.</span>
+		</p>
 		<p>If all that looks good then let's workout!</p>
 		<a ng-click="finish()" class="button">Exercise</a>
 		<a ng-click="navigatorSwitch('parameters')" class="button"> Previous ></a>
 	</div>
 
-	<div ng-switch-when="active" class="page">
-		<ul>
-			<li ng-repeat="exercise in exercises | exercise:equipmentIdList:difficulty.value:workoutDuration.time">
-				{{exercise.name}}
-			</li>
-		</ul>
-		<a href="#!/" class="button expanded">Finish</a>
+	<div ng-switch-when="active" class="page box-shadow">
+		<div class="exercise-wrapper" ng-repeat="exercise in exercises | exercise:equipmentIdList:difficulty.value:workoutDuration.time">
+			<div ng-if="exerciseNavigator === $index" class="page">
+				<div class="exerciseInfo">
+					<h2>{{exercise.name}}</h2>
+					<h3>Instructions</h3>
+					<p> - {{exercise.description}}</p>
+				</div>
+				<a ng-click="exerciseSwitch($index)" class="button">Next Exercise</a>
+			</div>
+			<div ng-show="$last && exerciseNavigator == $index + 1">
+				<h2>Workout Complete!</h2>
+				<a href="#!/" class="button expanded">Finish</a>
+			</div>
+		</div>
+		
 	</div>
 </div>
 
