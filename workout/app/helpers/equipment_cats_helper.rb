@@ -1,0 +1,2 @@
+module EquipmentCatsHelper
+end

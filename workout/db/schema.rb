@@ -10,29 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170928232225) do
+ActiveRecord::Schema.define(version: 20171021225915) do
 
-  create_table "concentrations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "concentrations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "concentrations_exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "concentrations_exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "concentration_id"
     t.integer "exercise_id"
     t.index ["concentration_id"], name: "index_concentrations_exercises_on_concentration_id", using: :btree
     t.index ["exercise_id"], name: "index_concentrations_exercises_on_exercise_id", using: :btree
   end
 
-  create_table "equipment", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "equipment", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.integer  "equipment_cat_id_id"
+    t.integer  "equipment_cat_id"
+    t.index ["equipment_cat_id"], name: "index_equipment_on_equipment_cat_id", using: :btree
+    t.index ["equipment_cat_id_id"], name: "index_equipment_on_equipment_cat_id_id", using: :btree
+  end
+
+  create_table "equipment_cats", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.string   "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
 
-  create_table "exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.string   "description"
     t.string   "picture"
@@ -42,7 +53,7 @@ ActiveRecord::Schema.define(version: 20170928232225) do
     t.index ["equipment_id"], name: "index_exercises_on_equipment_id", using: :btree
   end
 
-  create_table "user_equipments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "user_equipments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.string   "description"
     t.string   "user_id"
@@ -52,7 +63,7 @@ ActiveRecord::Schema.define(version: 20170928232225) do
     t.index ["user_id", "equipment_id"], name: "index_user_equipments_on_user_id_and_equipment_id", using: :btree
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -71,5 +82,6 @@ ActiveRecord::Schema.define(version: 20170928232225) do
 
   add_foreign_key "concentrations_exercises", "concentrations"
   add_foreign_key "concentrations_exercises", "exercises"
+  add_foreign_key "equipment", "equipment_cats"
   add_foreign_key "exercises", "equipment"
 end
