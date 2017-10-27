@@ -35,6 +35,7 @@ app.controller("WorkoutEngineCtrl", [
 		$scope.selectedConcentration = [];
 		// concentration filtered exerciese, but not equipment filtered
 		$scope.exercises = [];
+		$scope.exercises2 = [];
 		// the eventual filtered exercise array by concentration and equipment
 		$scope.filteredExercises = [];
 		$scope.workoutDuration = {
@@ -88,24 +89,43 @@ app.controller("WorkoutEngineCtrl", [
 			return duplicate;	
 		};
 
-		var exerciseQuery = function(id) {
+		// This is hitting the route to grab exercises that match the concentrations selected
+		var exerciseQuery = function(concId, eqId) {
 			// // run a query and store the corresponding exercises 
-			exercise.query({concentration: id}).then(function(results) {
-				// for loop to add each individual result 
-				for( var each = 0; each < results.length; each++) {
-					var duplicate = duplicateCheck($scope.exercises, results[each], "name");
-					if (!duplicate) {
-						$scope.exercises.push(results[each]);
-					} else {
-						continue;
+			if(concId) {
+				exercise.query({concentration:concId}).then(function(results) {
+					// for loop to add each individual result 
+					for( var each = 0; each < results.length; each++) {
+						var duplicate = duplicateCheck($scope.exercises, results[each], "name");
+						if (!duplicate) {
+							$scope.exercises.push(results[each]);
+						} else {
+							continue;
+						};
 					};
-				};
-				$scope.searching = false;
-			}, function(error) {
-				console.log(error);
-			});
+					$scope.searching = false;
+				}, function(error) {
+					console.log(error);
+				});
+			} else if (eqId) {
+				exercise.query({equipment:eqId}).then(function(results) {
+					for(var each = 0; each < results.length; each++) {
+						var duplicate = duplicateCheck($scope.exercises, results[each], "name");
+						if (!duplicate) {
+							$scope.exercises2.push(results[each]);
+						} else {
+							continue;
+						};
+					};
+					$scope.searching = false;
+				}, function(error) {
+					console.log(error);
+				});
+			}
 		};		
 
+
+		// This is just putting each selected concentration into an array
 	    $scope.selectConc = function(x) {
 	    	// console.log("___________________________");
 	    	if ($scope.selectedConcentration.length > 0) {
@@ -127,7 +147,9 @@ app.controller("WorkoutEngineCtrl", [
 	    		}
 	    		for(var i = 0; i < $scope.userEquipments.length; i++) {
 	    			var selected = $scope.userEquipments[i].equipmentId;
+	    			exerciseQuery(null, selected);
 	    			$scope.equipmentIdList.push(parseInt(selected));
+	    			console.log($scope.exercise2);
 	    			// console.log($scope.equipmentIdList);
 	    		} 
 	    		$scope.navigator = "active";
@@ -135,7 +157,6 @@ app.controller("WorkoutEngineCtrl", [
 	    		flash.error("please make a selection");
 	    		// console.log("please make a selection");
 	    	}
-			// $scope.filteredExercises = exerciseFilter($scope.exercises, $scope.userEquipments);
 			// console.log("Finished Filtering");
 			// console.log($scope.filteredExercises);
 	    }

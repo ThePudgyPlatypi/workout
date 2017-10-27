@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171021225915) do
+ActiveRecord::Schema.define(version: 20171024035647) do
 
   create_table "concentrations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
@@ -43,14 +43,19 @@ ActiveRecord::Schema.define(version: 20171021225915) do
     t.datetime "updated_at",  null: false
   end
 
+  create_table "equipment_exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.integer "exercise_id"
+    t.integer "equipment_id"
+    t.index ["equipment_id"], name: "index_equipment_exercises_on_equipment_id", using: :btree
+    t.index ["exercise_id"], name: "index_equipment_exercises_on_exercise_id", using: :btree
+  end
+
   create_table "exercises", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.string   "description"
     t.string   "picture"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "equipment_id"
-    t.index ["equipment_id"], name: "index_exercises_on_equipment_id", using: :btree
+    t.datetime "created_at",  default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at",  default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "user_equipments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -83,5 +88,6 @@ ActiveRecord::Schema.define(version: 20171021225915) do
   add_foreign_key "concentrations_exercises", "concentrations"
   add_foreign_key "concentrations_exercises", "exercises"
   add_foreign_key "equipment", "equipment_cats"
-  add_foreign_key "exercises", "equipment"
+  add_foreign_key "equipment_exercises", "equipment"
+  add_foreign_key "equipment_exercises", "exercises"
 end
