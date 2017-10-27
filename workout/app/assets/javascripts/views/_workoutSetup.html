@@ -94,7 +94,7 @@
 	</div>
 
 	<div ng-switch-when="active" class="page box-shadow">
-		<div class="exercise-wrapper" ng-repeat="exercise in exercises | exercise:equipmentIdList:difficulty.value:workoutDuration.time">
+		<div class="exercise-wrapper" ng-repeat="exercise in filteredExercises | exercise:difficulty.value:workoutDuration.time">
 			<div ng-if="exerciseNavigator === $index" class="page">
 				<div class="exerciseInfo">
 					<h2>{{exercise.name}}</h2>

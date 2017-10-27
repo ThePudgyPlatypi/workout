@@ -2,6 +2,7 @@ app.filter("randomizer", function() {
 // the Fisher-Yates (aka Knuth) Shuffle.
 // using underscore.js library to bring in memoize method so that there are no more digest errors
 	return _.memoize(function shuffle(array) {
+		console.log(array)
 	  var currentIndex = array.length, temporaryValue, randomIndex;
 
 	  // While there remain elements to shuffle...

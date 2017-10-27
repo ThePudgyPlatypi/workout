@@ -10,7 +10,23 @@ app.controller("WorkoutEngineCtrl", [
 	function($scope, equipment, userEquipment, concentrations, exercise, Auth, flash, exerciseFilter) {
 		$scope.searching = true;
 		$scope.pageClass="Workout";
-		
+		// array for the concentrations the user will select
+		$scope.selectedConcentration = [];
+		// concentration filtered exerciese, but not equipment filtered
+		$scope.exercises = [];
+		// the eventual filtered exercise array by concentration and equipment
+		$scope.filteredExercises = [];
+		$scope.workoutDuration = {
+			time: ""
+		};
+		$scope.difficulty = {
+			value: "Standard Difficulty"
+		};
+		$scope.navigator = "start";
+		$scope.exerciseNavigator = 0;	
+		$scope.equipmentList = [];
+
+
 		// getting current user
 		Auth.currentUser().then(function(user) {
 			$scope.user = user.id;
@@ -30,22 +46,30 @@ app.controller("WorkoutEngineCtrl", [
 			$scope.userEquipments = results;
 			$scope.searching = false;
 		});
-
-		// array for the concentrations the user will select
-		$scope.selectedConcentration = [];
-		// concentration filtered exerciese, but not equipment filtered
-		$scope.exercises = [];
-		$scope.exercises2 = [];
-		// the eventual filtered exercise array by concentration and equipment
-		$scope.filteredExercises = [];
-		$scope.workoutDuration = {
-			time: ""
-		};
-		$scope.difficulty = {
-			value: "Standard Difficulty"
-		};
-		$scope.navigator = "start";
-		$scope.exerciseNavigator = 0;	
+		
+		// Watches for a change on UserEquipment scope, then snags the stuffs when it is populated (not undefined)
+		$scope.$watch('userEquipments', function() {
+			if ($scope.userEquipments) {
+				for(var each = 0; each < $scope.userEquipments.length; each++) {
+					var currentEquip = $scope.userEquipments[each].equipmentId;
+					equipment.get(currentEquip).then(function(results) {
+						// Getting rid of any exercise arrays that may be empty thanks to not having exercises for that equipment
+						if(results.length > 0) {
+							// Checking for duplicates to make sure that only single entries are added
+							for(var r = 0; r < results.length; r++) {
+								var dup = duplicateCheck($scope.exercises, results[r], "name");
+								if (!dup) {
+									$scope.exercises.push(results[r]);
+								} else {
+									continue;
+								};
+							}
+						}
+					});		
+				};
+			};
+		});
+			
 		
 
 		// duplicate check, takes in array, item you that you want to add to array if there are no dup's, and
@@ -70,9 +94,11 @@ app.controller("WorkoutEngineCtrl", [
     			var last = arr.length - 1;
 				var name = arr[i][property];
 				var entry = item[property];
+
 				if (comments) {
 					console.log("Checking array entry: (" + i + ") with value of: (" + name + ") against would-be array entry: (" + entry + ")");
 				}
+
 				if(name === entry) {
 					if (comments) {
 						console.log("Duplicate entry found on " + i);
@@ -88,41 +114,6 @@ app.controller("WorkoutEngineCtrl", [
 			};
 			return duplicate;	
 		};
-
-		// This is hitting the route to grab exercises that match the concentrations selected
-		var exerciseQuery = function(concId, eqId) {
-			// // run a query and store the corresponding exercises 
-			if(concId) {
-				exercise.query({concentration:concId}).then(function(results) {
-					// for loop to add each individual result 
-					for( var each = 0; each < results.length; each++) {
-						var duplicate = duplicateCheck($scope.exercises, results[each], "name");
-						if (!duplicate) {
-							$scope.exercises.push(results[each]);
-						} else {
-							continue;
-						};
-					};
-					$scope.searching = false;
-				}, function(error) {
-					console.log(error);
-				});
-			} else if (eqId) {
-				exercise.query({equipment:eqId}).then(function(results) {
-					for(var each = 0; each < results.length; each++) {
-						var duplicate = duplicateCheck($scope.exercises, results[each], "name");
-						if (!duplicate) {
-							$scope.exercises2.push(results[each]);
-						} else {
-							continue;
-						};
-					};
-					$scope.searching = false;
-				}, function(error) {
-					console.log(error);
-				});
-			}
-		};		
 
 
 		// This is just putting each selected concentration into an array
@@ -140,27 +131,39 @@ app.controller("WorkoutEngineCtrl", [
 
 	    $scope.finish = function() {
 	    	if ($scope.selectedConcentration.length > 0) {
-	    		$scope.equipmentIdList = [];
+	    		// then go out and grab all the exercises that match the concentration that is selected
 	    		for (var each = 0; each < $scope.selectedConcentration.length; each++) {
-	    			exerciseQuery($scope.selectedConcentration[each].id);
-	    			// console.log("Finished adding equipment");
-	    		}
-	    		for(var i = 0; i < $scope.userEquipments.length; i++) {
-	    			var selected = $scope.userEquipments[i].equipmentId;
-	    			exerciseQuery(null, selected);
-	    			$scope.equipmentIdList.push(parseInt(selected));
-	    			console.log($scope.exercise2);
-	    			// console.log($scope.equipmentIdList);
-	    		} 
+	    			var concId = $scope.selectedConcentration[each].id;
+	    			// query the database
+	    			exercise.query({concentration:concId}).then(function(results) {
+						// for loop to add each individual result 
+						for(var i = 0; i < results.length; i++) {
+							// then check to see if they are a duplicate of the exercise list returned from the userEquipment query
+							// if they are, then add them to a list call filteredExercises because if they have the same concentration 
+							// and they are from the list of equipment that is available then the user wants to do a workout like that
+							var duplicate = duplicateCheck($scope.exercises, results[i], "name");
+							if (duplicate) {
+								// console.log("duplicate found, adding " + results[i].name);
+								// console.log($scope.filteredExercises);
+								$scope.filteredExercises.push(results[i]);
+								// console.log($scope.filteredExercises);
+							} else {
+								continue;
+							};
+						};
+						$scope.searching = false;
+					}, function(error) {
+						console.log(error);
+					});
+					
+	    		};
+	    		// console.log($scope.exercises);
 	    		$scope.navigator = "active";
 	    	} else {
-	    		flash.error("please make a selection");
-	    		// console.log("please make a selection");
-	    	}
-			// console.log("Finished Filtering");
-			// console.log($scope.filteredExercises);
+	    		flash.error("You need to select a concentration!");
+	    	};
 	    }
-
+	    
 	    $scope.delete = function(id) {
 			var toBeDeleted;
 			function findDeleted(element) {
@@ -180,6 +183,6 @@ app.controller("WorkoutEngineCtrl", [
 
 		$scope.exerciseSwitch = function(id) {
 			$scope.exerciseNavigator = id + 1;
-			console.log($scope.exercises.length);
+			console.log($scope.filteredExercises.length);
 		}
 }]);

@@ -18,6 +18,7 @@ default: &default
   password: funky123
   port: 3306
   socket: /var/run/mysqld/mysqld.sock
+  timeout: 5000
 
 development:
   <<: *default
